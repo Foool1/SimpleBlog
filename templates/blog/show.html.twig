@@ -8,7 +8,13 @@
         <a href="{{ path('blog') }}" class="btn btn-outline-primary btn-sm px-4 py-2">
             <i class="bi bi-arrow-left"></i> Powrót do listy postów
         </a>
-        <a href="{{ path('blog_edit', {'id': post.id}) }}" class="btn btn-warning btn-sm px-4 py-2">Edytuj</a>
+        <div class="d-flex gap-2">
+            <a href="{{ path('blog_edit', {'id': post.id}) }}" class="btn btn-warning btn-sm px-4 py-2">Edytuj</a>
+            <form method="post" action="{{ path('blog_delete', {'id': post.id}) }}" onsubmit="return confirm('Na pewno usunąć ten post?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_post_' ~ post.id) }}">
+                <button class="btn btn-danger btn-sm px-4 py-2" type="submit">Usuń</button>
+            </form>
+        </div>
     </div>
     <div class="card">
         <div class="card-body">

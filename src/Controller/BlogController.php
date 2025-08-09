@@ -13,6 +13,21 @@ use App\Form\PostType;
 
 class BlogController extends AbstractController
 {
+    // ...existing code...
+    #[Route('/blog/{id}/delete', name: 'blog_delete', methods: ['POST'])]
+    public function deletePost(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        $post = $em->getRepository(Post::class)->find($id);
+        if (!$post) {
+            throw $this->createNotFoundException('Post nie istnieje.');
+        }
+        if ($this->isCsrfTokenValid('delete_post_' . $post->getId(), $request->request->get('_token'))) {
+            $em->remove($post);
+            $em->flush();
+            $this->addFlash('success', 'Post został usunięty.');
+        }
+        return $this->redirectToRoute('blog');
+    }
     #[Route('/blog', name: 'blog')]
     public function index(EntityManagerInterface $em): Response
     {
