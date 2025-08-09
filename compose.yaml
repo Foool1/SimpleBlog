@@ -17,6 +17,20 @@ services:
       - database_data:/var/lib/postgresql/data:rw
       # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
       # - ./docker/db/data:/var/lib/postgresql/data:rw
+  php:
+    image: php:8.3-cli
+    container_name: simpleblog-php
+    working_dir: /app
+    volumes:
+      - ./:/app:rw,cached
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: "postgresql://app:!ChangeMe!@database:5432/app?serverVersion=16&charset=utf8"
+    depends_on:
+      - database
+    ports:
+      - "8000:8000"
+    command: bash -c "apt-get update && apt-get install -y git unzip libpq-dev && docker-php-ext-install pdo pdo_pgsql && curl -sS https://getcomposer.org/installer | php && php composer.phar install && php -S 0.0.0.0:8000 -t public"
 ###< doctrine/doctrine-bundle ###
 
 volumes:
