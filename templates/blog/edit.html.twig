@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edytuj post | Blog{% endblock %}
+
+{% block body %}
+<div class="container mt-5" style="max-width: 800px;">
+    <a href="{{ path('blog') }}" class="btn btn-link mb-3">&larr; Powrót do listy postów</a>
+    <div class="card">
+        <div class="card-body">
+            <h2 class="mb-4">Edytuj post</h2>
+            {{ form_start(form) }}
+                <div class="mb-3">
+                    {{ form_label(form.title) }}
+                    {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_errors(form.title) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(form.content) }}
+                    {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 8}}) }}
+                    {{ form_errors(form.content) }}
+                </div>
+                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

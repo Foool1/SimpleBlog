@@ -4,7 +4,12 @@
 
 {% block body %}
 <div class="container mt-5" style="max-width: 800px;">
-    <a href="{{ path('blog') }}" class="btn btn-link mb-3">&larr; Powrót do listy postów</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{{ path('blog') }}" class="btn btn-outline-primary btn-sm px-4 py-2">
+            <i class="bi bi-arrow-left"></i> Powrót do listy postów
+        </a>
+        <a href="{{ path('blog_edit', {'id': post.id}) }}" class="btn btn-warning btn-sm px-4 py-2">Edytuj</a>
+    </div>
     <div class="card">
         <div class="card-body">
             <h2 class="card-title">{{ post.title }}</h2>

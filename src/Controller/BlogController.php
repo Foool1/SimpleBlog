@@ -8,6 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 
+use App\Entity\Post;
+use App\Form\PostType;
+
 class BlogController extends AbstractController
 {
     #[Route('/blog', name: 'blog')]
@@ -41,6 +44,28 @@ class BlogController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+        #[Route('/blog/{id}/edit', name: 'blog_edit')]
+        public function editPost(int $id, Request $request, EntityManagerInterface $em): Response
+        {
+            $post = $em->getRepository(Post::class)->find($id);
+            if (!$post) {
+                throw $this->createNotFoundException('Post nie istnieje.');
+            }
+
+            $form = $this->createForm(PostType::class, $post);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->flush();
+                $this->addFlash('success', 'Post został zaktualizowany.');
+                return $this->redirectToRoute('blog_show', ['id' => $post->getId()]);
+            }
+
+            return $this->render('blog/edit.html.twig', [
+                'form' => $form->createView(),
+                'post' => $post,
+            ]);
+        }
     #[Route('/blog/{id}', name: 'blog_post_show', requirements: ['id' => '\\d+'])]
     public function showPost(int $id, EntityManagerInterface $em): Response
     {
