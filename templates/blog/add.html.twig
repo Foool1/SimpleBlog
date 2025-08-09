@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dodaj post{% endblock %}
+
+{% block body %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div style="width: 60%; min-width: 400px;">
+        <h2 class="mb-4 text-center">Dodaj nowy post</h2>
+        {{ form_start(form) }}
+            <div class="mb-3">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, {'attr': {'class': 'form-control', 'style': 'width: 100%;'}}) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.content) }}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control', 'rows': 10, 'style': 'width: 100%; min-height: 200px;'}}) }}
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success btn-lg">Zapisz</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

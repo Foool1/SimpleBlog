@@ -5,12 +5,51 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BlogController extends AbstractController
 {
     #[Route('/blog', name: 'blog')]
-    public function index(): Response
+    public function index(EntityManagerInterface $em): Response
     {
-        return $this->render('blog/index.html.twig');
+        $posts = $em->getRepository(\App\Entity\Post::class)->findBy([], ['createdAt' => 'DESC']);
+        return $this->render('blog/index.html.twig', [
+            'posts' => $posts,
+        ]);
+    }
+
+    #[Route('/blog/add', name: 'blog_post_add')]
+    public function addPost(Request $request, EntityManagerInterface $em): Response
+    {
+        $post = new \App\Entity\Post();
+        $form = $this->createFormBuilder($post)
+            ->add('title')
+            ->add('content')
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setCreatedAt(new \DateTimeImmutable());
+            $post->setAuthor($this->getUser());
+            $em->persist($post);
+            $em->flush();
+            return $this->redirectToRoute('blog');
+        }
+
+        return $this->render('blog/add.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+    #[Route('/blog/{id}', name: 'blog_post_show', requirements: ['id' => '\\d+'])]
+    public function showPost(int $id, EntityManagerInterface $em): Response
+    {
+        $post = $em->getRepository(\App\Entity\Post::class)->find($id);
+        if (!$post) {
+            throw $this->createNotFoundException('Post nie istnieje.');
+        }
+        return $this->render('blog/show.html.twig', [
+            'post' => $post,
+        ]);
     }
 }
