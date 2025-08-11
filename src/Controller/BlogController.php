@@ -11,9 +11,19 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Post;
 use App\Form\PostType;
 
+/**
+ * Controller for blog-related actions.
+ */
 class BlogController extends AbstractController
 {
-    // ...existing code...
+    /**
+     * Deletes a blog post.
+     *
+     * @param int $id
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/blog/{id}/delete', name: 'blog_delete', methods: ['POST'])]
     public function deletePost(int $id, Request $request, EntityManagerInterface $em): Response
     {
@@ -28,6 +38,13 @@ class BlogController extends AbstractController
         }
         return $this->redirectToRoute('blog');
     }
+
+    /**
+     * Lists all blog posts.
+     *
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
     #[Route('/blog', name: 'blog')]
     public function index(EntityManagerInterface $em): Response
     {
