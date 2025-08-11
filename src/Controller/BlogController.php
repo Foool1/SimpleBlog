@@ -90,7 +90,7 @@ class BlogController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $em->flush();
                 $this->addFlash('success', 'Post został zaktualizowany.');
-                return $this->redirectToRoute('blog_show', ['id' => $post->getId()]);
+                return $this->redirectToRoute('blog_post_show', ['id' => $post->getId()]);
             }
 
             return $this->render('blog/edit.html.twig', [
